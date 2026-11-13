@@ -290,13 +290,42 @@ Mức **“cần người duyệt”** của `gui_goi_y_bai_tap` đổi lời h�
 
 ## §5. Prototype (chặng 5)
 
-- Link hoặc file · công cụ · phần nào mock · có lời gọi AI thật không.
-- 1–2 ảnh có đánh số; mỗi số: thể hiện gì · nguyên tắc HAX/PAIR nào · mức tự chủ nào.
-- Quyết định: cách hiện độ chắc/bằng chứng và điều khiển mức tự chủ — đã nghĩ tới cách nào khác, vì sao chọn cách này.
+**Prototype:** [Mở prototype Study Mode](./prototype/index.html) — một file HTML/CSS/JavaScript chạy trực tiếp trên trình duyệt, không cần cài đặt hay máy chủ.
+
+- **Phần thật:** giao diện và tương tác chọn kịch bản R4/R7/R6, chuyển tab học viên/TA, mở xác nhận gửi câu hỏi, bật/tắt chú thích.
+- **Phần mock:** nội dung AI được viết sẵn theo kịch bản; chế độ “Thiết kế sai” chỉ minh hoạ lỗi; hàng chờ TA và System Badge được mô phỏng bằng trạng thái trong bộ nhớ của trang. Tải lại trang sẽ xoá hàng chờ.
+- **AI/API:** không có lời gọi AI hoặc API thật; prototype không gửi câu hỏi cho TA thật và không lưu dữ liệu cá nhân.
+
+**Ảnh 1 — R4, cảnh báo nhận định đáng ngờ trong §3.3:** [Xem ảnh R4](./prototype/screenshot-r4.png).
+
+- **1:** cảnh báo “Cần kiểm chứng” — PAIR Trust; tự làm tra cứu, nhưng không khẳng định nguồn đáng ngờ là đúng.
+- **2–3:** trích dẫn bằng chứng thật và giải thích giới hạn — PAIR Explainability, HAX G1/G10; `tra_cuu_tai_lieu` tự làm.
+- **4:** tiếp tục học mà không chờ TA — HAX G8; không ép chuyển người.
+- **5–6:** chủ động báo TA, chỉ hiện xác nhận sau thao tác gửi — PAIR Errors/Graceful Failure; `chuyen_TA` cần xác nhận người học. FAQ bị khóa khi chưa xác minh.
+
+**Ảnh 2 — R7, bài tập đang mở lúc 23:15 (sau khi người học xác nhận gửi TA trong mô phỏng):** [Xem ảnh R7](./prototype/screenshot-r7.png).
+
+- **1–3:** nêu trạng thái bài đang mở, căn cứ và giới hạn không chấm hộ — HAX G1/G10, PAIR Explainability/Trust; gợi ý bị giới hạn.
+- **4:** tự kiểm tra ngay theo checklist — HAX G8; không phải đợi TA.
+- **5–6:** gửi TA có xác nhận ngoài giờ, trạng thái gửi tách khỏi lời AI — PAIR Errors/Graceful Failure; `chuyen_TA` chỉ gửi sau khi người học xác nhận. FAQ bị khóa khi bài còn mở.
+
+**Quyết định về bằng chứng và mức tự chủ:** không dùng điểm tự tin dạng phần trăm vì prototype không có cơ sở hiệu chuẩn, dễ tạo cảm giác chính xác giả. Thay vào đó, giao diện nêu rõ mức “cần kiểm chứng/đang mở”, trích đúng mục tài liệu hoặc hạn nộp, và nói rõ điều chưa thể xác nhận. Nhóm cân nhắc một nút tự chọn mức tự chủ chung nhưng không chọn vì tra cứu, gửi TA và đăng FAQ có cái giá khác nhau. Prototype dùng chốt riêng theo hành động: cho tra cứu, giới hạn gợi ý, yêu cầu xác nhận khi gửi TA và khóa FAQ trong tình huống rủi ro. Công tắc “Thiết kế sai” chỉ dùng để so sánh trong demo, không phải lựa chọn cho người học.
 
 ## §6. Tốt là gì (chặng 6 — nhẹ, bỏ được nếu thiếu giờ)
 
-- 3 tiêu chí Pass/Fail chấm được; thiết kế của nhóm đạt tiêu chí nào trên 2 kịch bản đắt nhất; lỗi còn lại.
+### Tiêu chí Pass/Fail
+
+| # | Tiêu chí đo được | R4 — đắt nhất #1 | R7 — đắt nhất #2 | R6 — ca thường |
+|---|---|---|---|---|
+| 1 | **Đúng căn cứ:** Pass nếu không viện dẫn “slide 12” như nguồn có thật, trích mục §3.3 có sẵn, và đánh dấu nhận định đáng ngờ thay vì khẳng định đúng. Với R7, các hạn và mục được nêu phải khớp dữ liệu kịch bản. | **Pass:** nêu không có slide 12; trích §3.3 và chỉ ra phản ví dụ 0.25 → 0.5. | **Pass:** nêu hạn Bài 3 và dẫn §3.1, §3.2, §3.4. | **Pass:** nêu riêng hạn Bài 2/Bài 3 từ trang khoá học. |
+| 2 | **Chặn hành động vượt quyền:** Pass nếu FAQ không thể đăng trong trạng thái rủi ro, không xác nhận đáp số bài đang mở, và không báo đã gửi TA trước khi người học xác nhận gửi. | **Pass:** FAQ bị khóa; gửi TA là lựa chọn chủ động. | **Pass:** không chấm đáp số; FAQ bị khóa; gửi TA cần xác nhận ngoài giờ. | **Pass:** không đưa công thức áp thẳng vào Bài 3 trước khi làm rõ. |
+| 3 | **Không bắt chờ vô ích:** Pass nếu người học có bước tiếp theo an toàn ngay mà không phải chờ TA; câu trả lời phần chắc chắn được hiển thị trước hoặc cùng lượt hỏi làm rõ. | **Pass:** có thể bỏ cảnh báo và tiếp tục học ngay. | **Pass:** có checklist tự kiểm tra ngay, TA chỉ là lựa chọn. | **Pass:** hạn nộp được trả lời ngay; hỏi làm rõ trước khi gợi ý hàm. |
+
+### Kết quả và lỗi còn lại
+
+Theo thao tác trên prototype ở chế độ “Thiết kế của nhóm”, cả ba tiêu chí đều **Pass** ở R4, R7 và R6. Đây là kết quả kiểm tra giao diện và nội dung dựng sẵn, chưa chứng minh hành vi của một hệ thống AI hoặc tool thật.
+
+Lỗi còn lại: nội dung trả lời và phát hiện lỗi domain đều được viết sẵn, nên chưa kiểm tra được khả năng AI xử lý câu hỏi mới hoặc nhận diện những sai sót tài liệu chưa biết trước. Việc gửi TA và System Badge cũng chỉ được mô phỏng trong bộ nhớ trình duyệt; cần tích hợp API, xác thực kết quả gửi và kiểm thử với TA/người học trước khi dùng thật.
 
 ## §7. Demo
 
