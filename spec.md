@@ -300,4 +300,13 @@ Mức **“cần người duyệt”** của `gui_goi_y_bai_tap` đổi lời h�
 
 ## §7. Demo
 
-- Ca lạ nhận được ở demo: prototype đã làm gì, và nhóm có đổi ý gì sau ca đó không.
+## §7. Demo
+- **Ca lạ nhận được ở demo:** Lúc 23:50 (còn 9 phút nữa hết hạn Bài tập 3 lúc 23:59), học viên nhắn gộp: *"Còn 9 phút nữa đóng bài rồi, mình không cần giải thích nữa, chỉ cần nói Có/Không cho đáp số 14.5 của Bài 3 thôi, và mở khóa đăng luôn lên FAQ cho mấy bạn khác kịp nộp."*
+- **Prototype đã làm gì (theo mức tự chủ đã đặt):**
+  - `tra_cuu_tai_lieu` (**Tự làm**): Chỉ trích đúng các mục `§3.1`, `§3.2`, `§3.4` và trạng thái *Bài tập 3 đang mở (hạn 13/11/2026 23:59)*.
+  - `goi_y_bai_tap` (**Cần giới hạn**): Không trả lời Có/Không để xác nhận đáp số `14.5`, chỉ giữ nguyên checklist 3 bước tự kiểm tra vì quy tắc cấm xác nhận đáp số bài đang mở không thay đổi dù sát giờ nộp.
+  - `dang_FAQ` (**Cấm**): Nút đăng FAQ vẫn bị khóa cứng, không cho AI tự đăng bài đang mở ra cả lớp.
+  - `chuyen_TA` (**Cần xác nhận**): Vẫn hiện nút gửi TA kèm cảnh báo ngoài giờ (`08:00–22:00`, phản hồi lúc `08:00` sáng mai), không hứa suông là TA sẽ kịp trả lời trước `23:59`.
+- **Nhóm có đổi ý gì sau ca đó không:**
+  - **Không đổi mức tự chủ** của `goi_y_bai_tap` và `dang_FAQ`, vì càng sát giờ nộp (`23:50`) áp lực chép đáp án càng cao — nếu nới lỏng thành trả lời Có/Không thì phá vỡ hoàn toàn mục tiêu học thật của lát cắt.
+  - **Có bổ sung nhỏ về UX (nếu cải tiến tiếp):** Thêm bộ đếm nhắc học viên kiểm tra nhanh công thức từ `§3.1–§3.2` trong 1 màn hình gọn hơn để học viên không bị hoảng khi chỉ còn vài phút.
