@@ -185,6 +185,94 @@ Với mỗi tool:
 - Lý do theo cost-of-error: sai thì ai chịu gì · đảo lại được không · chờ người thì mất gì.
 - Phương án đã cân nhắc và vì sao loại.
 
+## §4. Mức tự chủ (chặng 4)
+
+1. Tool: tra_cuu_tai_lieu
+
+a. Mức của nhóm: Tự làm
+
+b. Lý do theo cost-of-error:
+- Sai thì ai chịu gì: AI chỉ trích dẫn văn bản gốc từ mục §3.1 đến §3.5. Nếu trích nhầm mục, học viên hoặc trợ lý đọc lại sẽ nhận ra ngay; rủi ro thấp.
+- Đảo lại được không: Hoàn toàn được (thao tác đọc/tra cứu thuần túy, không làm thay đổi trạng thái hệ thống).
+- Chờ người thì mất gì: Mất thời gian phản hồi tức thì của học viên (latency), gây cảm giác trợ lý chậm chạp trong khi đây là tác vụ tra cứu cơ bản.
+
+c. Phương án đã cân nhắc và vì sao loại:
+- Cân nhắc: Bắt buộc TA phải duyệt mọi câu trả lời tra cứu tài liệu trước khi hiển thị.
+- Lý do loại: Quá tải cho TA vì lượng câu hỏi tra cứu cú pháp/lý thuyết cơ bản rất lớn, làm mất ý nghĩa của trợ lý tự động.
+2. Tách Tool: soan_goi_y_bai_tap & gui_goi_y_bai_tap
+
+Nhóm quyết định tách tool gốc goi_y_bai_tap thành 2 bước riêng biệt: Soạn thảo (soan_goi_y_bai_tap) và Gửi đi (gui_goi_y_bai_tap) để kiểm soát rủi ro sư phạm.
+
+2a. Tool: soan_goi_y_bai_tap (Soạn sẵn gợi ý)
+
+i. Mức của nhóm: Tự làm
+
+ii. Lý do theo cost-of-error:
+
+Đây chỉ là bước AI tạo ra bản nháp nội bộ (draft) để hỗ trợ TA hoặc để chờ duyệt. Bản thân việc soạn thảo chưa tác động đến học viên nên cost-of-error bằng 0.
+
+2b. Tool: gui_goi_y_bai_tap (Gửi gợi ý cho học viên)
+i. Mức của nhóm: Cần người duyệt
+
+ii. Ai duyệt: Trợ giảng (TA) phụ trách buổi học.
+
+- Người duyệt thấy gì: Nội dung gợi ý do AI soạn, câu hỏi gốc của học viên, và trích đoạn tài liệu liên quan (ví dụ: học viên hỏi về hàm Excel tính độ lệch chuẩn, hoặc hỏi câu (b) bài 3.5 về "lương điển hình").
+
+- Quá hạn thì sao: Nếu TA không duyệt trong vòng 30 phút, hệ thống sẽ chuyển sang trạng thái "Đang chuyển câu hỏi trực tiếp cho TA" và thông báo giờ làm việc của TA (08:00–22:00), tránh để học viên chờ đợi vô vọng trong ngày hạn nộp bài (Hạn Bài tập 3 là 13/11/2026 23:59).
+
+iii. Lý do theo cost-of-error:
+
+Sai thì ai chịu gì: Dữ liệu buổi 3 có điểm mù (tài liệu chỉ định nghĩa lý thuyết phương sai/độ lệch chuẩn ở §3.3 với một lỗi logic toán học nhỏ: "Vì là căn bậc hai, độ lệch chuẩn luôn nhỏ hơn phương sai" — điều này sai khi phương sai <1, đồng thời tài liệu không cung cấp hàm Excel tính độ lệch chuẩn). Nếu AI tự ý bịa hàm Excel hoặc gợi ý quá đà (như làm hộ câu a, b bài 3.5), học viên sẽ chép sai hoặc mất cơ hội tư duy. TA chịu trách nhiệm chuyên môn.
+
+- Đảo lại được không: Không thể thu hồi hoàn toàn nếu học viên đã đọc và chép lại gợi ý "quá tay".
+
+- Chờ người thì mất gì: Có thể chậm từ 15–30 phút trong giờ hành chính của TA, nhưng đổi lại đảm bảo chất lượng sư phạm và tính chính xác kỹ thuật (Excel).
+
+iv. Phương án đã cân nhắc và vì sao loại:
+
+- Cân nhắc: Cho phép AI tự động gửi gợi ý ngay lập tức.
+
+- Lý do loại: Vi phạm nguyên tắc sư phạm (AI dễ bị "lộ đáp án" bài tập về nhà trong ngày hạn chót như hôm nay 13/11) và rủi ro AI tự bịa hàm Excel sai do tài liệu không đề cập.
+
+3. Tool: chuyen_TA
+a. Mức của nhóm: Tự làm
+b. Lý do theo cost-of-error:
+
+- Sai thì ai chịu gì: Thao tác này chỉ là định tuyến (routing) yêu cầu vào hàng đợi của TA kèm thông tin giờ trực (08:00–22:00). Nếu chuyển nhầm, TA chỉ cần gán lại nhãn cho đúng người/kênh.
+
+- Đảo lại được không: Hoàn toàn được (hệ sinh thái quản lý ticket/hỏi đáp cho phép chuyển đổi qua lại giữa các trạng thái).
+
+- Chờ người thì mất gì: Không mất gì vì đây là tính năng tự động điều phối hệ thống.
+
+c. Phương án đã cân nhắc và vì sao loại:
+
+- Cân nhắc: Yêu cầu nhân viên trực ban hoặc quản lý duyệt lệnh chuyển giao.
+
+- Lý do loại: Gây nghẽn hệ thống và làm tăng thời gian chờ xử lý thủ công không cần thiết.
+
+4. Tool: dang_FAQ
+a. Mức của nhóm: Cần người duyệt
+
+b. Ai duyệt: Giảng viên hoặc Trợ giảng trưởng (Lead TA).
+
+- Người duyệt thấy gì: Tiêu đề câu hỏi của học viên, câu trả lời do AI tổng hợp, và nhãn phân loại chủ đề (ví dụ: §3.2 Trung vị, hoặc thắc mắc về hạn nộp bài 13/11).
+
+- Quá hạn thì sao: Nếu quá 24 giờ không được duyệt, bản nháp sẽ bị lưu trữ vào mục "Chờ xét duyệt lâu ngày" và không hiển thị công khai lên FAQ chung để tránh thông tin cũ/lỗi thời.
+
+c. Lý do theo cost-of-error:
+
+- Sai thì ai chịu gì: Nếu AI trả lời sai (ví dụ nhầm lẫn về hạn nộp hoặc công thức thống kê) mà được đẩy lên FAQ chung, cả lớp (hàng chục/trăm học viên) sẽ tiếp cận thông tin sai lệch, gây mất uy tín khoá học và làm hoang mang diện rộng.
+
+- Đảo lại được không: Có thể gỡ xuống, nhưng như đề bài đã nêu: "nhiều người đã đọc", việc đính chính gây tốn thời gian và giảm lòng tin của học viên.
+
+- Chờ người thì mất gì: Chậm cập nhật FAQ công khai, nhưng đảm bảo chất lượng nội dung chuẩn xác tuyệt đối.
+
+d. Phương án đã cân nhắc và vì sao loại:
+
+- Cân nhắc: Cho phép AI tự động đăng FAQ khi độ tự tin (confidence score) của mô hình đạt trên 90%.
+
+- Lý do loại: AI có xu hướng "ảo giác" (hallucination) đối với các chi tiết kỹ thuật số liệu hoặc cú pháp phần mềm không có sẵn trong văn bản ngắn của buổi học, rủi ro phát tán lỗi sai ra toàn lớp là không thể chấp nhận được.
+
 Thêm:
 
 - Tool khó xếp nhất: mỗi người từng chọn gì, cái giá của mỗi phía (trỏ về kịch bản ở §2), nhóm chốt thế nào.
