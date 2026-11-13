@@ -179,14 +179,6 @@
 
 ## §4. Mức tự chủ (chặng 4)
 
-Với mỗi tool:
-
-- Mức của nhóm (tự làm / cần người duyệt / cấm). Nếu cần người duyệt: ai duyệt · người duyệt thấy gì · quá hạn thì sao.
-- Lý do theo cost-of-error: sai thì ai chịu gì · đảo lại được không · chờ người thì mất gì.
-- Phương án đã cân nhắc và vì sao loại.
-
-## §4. Mức tự chủ (chặng 4)
-
 1. Tool: tra_cuu_tai_lieu
 
 a. Mức của nhóm: Tự làm
@@ -273,12 +265,29 @@ d. Phương án đã cân nhắc và vì sao loại:
 
 - Lý do loại: AI có xu hướng "ảo giác" (hallucination) đối với các chi tiết kỹ thuật số liệu hoặc cú pháp phần mềm không có sẵn trong văn bản ngắn của buổi học, rủi ro phát tán lỗi sai ra toàn lớp là không thể chấp nhận được.
 
-Thêm:
+### Tool khó xếp nhất: `gui_goi_y_bai_tap`
 
-- Tool khó xếp nhất: mỗi người từng chọn gì, cái giá của mỗi phía (trỏ về kịch bản ở §2), nhóm chốt thế nào.
-- Thử mức đã đặt trên 2 kịch bản đắt nhất + 1 kịch bản bình thường: cái sai có bị chặn không? còn việc nào làm khi lẽ ra phải hỏi? người dùng bình thường có phải chờ vô ích không?
-- Luật thêm hoặc tool tách bước (nếu có), và vì sao.
-- Một mức tự chủ đã đổi lời hứa nào với người dùng.
+Theo xác nhận của nhóm, cả ba thành viên đều chọn `gui_goi_y_bai_tap` là tool khó xếp nhất. Gợi ý có thể giúp người học tiến bộ ngay, nhưng cũng có thể làm lộ đáp án bài đang mở hoặc bịa cú pháp không có trong tài liệu (§2: R4, R7; thêm rủi ro hàm Excel ở §4.2).
+
+**Nhóm chốt:** tách `soan_goi_y_bai_tap` (AI tự soạn bản nháp) khỏi `gui_goi_y_bai_tap` (TA duyệt trước khi gửi). Cách này giữ được tốc độ chuẩn bị mà không tự động đưa nội dung chưa kiểm chứng tới người học. Nếu TA chưa duyệt sau 30 phút, hệ thống báo trạng thái chuyển câu hỏi trực tiếp cho TA và giờ hỗ trợ, thay vì để bản nháp chờ vô hạn.
+
+### Thử mức tự chủ trên ba kịch bản
+
+| Kịch bản (§2) | Mức/tool đã đặt | Cái sai có bị chặn? | Việc cần hỏi/xác nhận | Người học có phải chờ vô ích? |
+|---|---|---|---|---|
+| **R4 – Đắt nhất #1:** nhận định đáng ngờ trong §3.3 | `tra_cuu_tai_lieu`: tự làm; nội dung đáng ngờ không được khẳng định là đúng, FAQ cần người duyệt. | **Có với lỗi đã biết:** trả lời phải nêu câu trích dẫn và giới hạn xác minh; không tự sửa tài liệu hay phát tán thành FAQ. Việc tra cứu tự động tự nó không phát hiện được mọi lỗi domain mới, nên vẫn cần chuyển giảng viên/TA khi phát hiện điểm đáng ngờ. | Hỏi người học trước khi gửi câu hỏi cho TA; không cần hỏi lại để cảnh báo về câu đã có bằng chứng cụ thể. | Không phải chờ để tiếp tục học phần khác; việc xác minh của TA có thể chờ và trạng thái phải được nói rõ. |
+| **R7 – Đắt nhất #2:** xin xác nhận đáp số, đăng FAQ và báo TA lúc 23:15 | `gui_goi_y_bai_tap` và `dang_FAQ`: cần người duyệt; `chuyen_TA`: chỉ chạy khi người học chủ động gửi. | **Có theo các chốt đã nêu:** không xác nhận đáp số bài đang mở, FAQ bị khóa, và không tuyên bố đã báo TA nếu tool chưa xác nhận thành công. | Cần người học bấm xác nhận gửi câu hỏi cho TA; yêu cầu trong hội thoại không tự tạo ticket. | Không phải đợi TA mới tiếp tục: người học nhận checklist tự kiểm tra ngay. Nếu gửi lúc 23:15, phải biết TA ngoài giờ và dự kiến phản hồi từ 08:00. |
+| **R1 – Ca tra cứu thông thường/near miss:** hỏi “slide 12” không có trong tài liệu | `tra_cuu_tai_lieu`: tự làm. | **Có:** báo không tìm thấy slide 12, không bịa nguồn, và dẫn tới mục tài liệu có thật nếu phù hợp. | Hỏi lại chỉ khi người học cần tìm một nội dung cụ thể mà yêu cầu hiện tại chưa nêu rõ; không cần chờ duyệt cho tra cứu thông thường. | **Không:** phản hồi ngay, không đưa tác vụ tra cứu cơ bản vào hàng chờ TA. |
+
+### Luật bổ sung và lý do tách tool
+
+- Không biến nội dung tìm thấy trong tài liệu thành sự thật đã xác minh nếu có dấu hiệu đáng ngờ; nêu nguồn và giới hạn, rồi mời người học yêu cầu TA/giảng viên kiểm tra (R4).
+- Với bài đang mở, không xác nhận đáp số và không cho đăng FAQ; chỉ đưa gợi ý tự kiểm tra dựa trên tài liệu. Chỉ gửi câu hỏi cho TA sau thao tác xác nhận rõ ràng của người học (R7).
+- Tách khâu soạn nháp và gửi gợi ý vì rủi ro xuất hiện lúc nội dung tới người học, không phải lúc tạo bản nháp. Duyệt trước khi gửi giảm nguy cơ bịa hàm Excel hoặc làm hộ bài; thời hạn duyệt và thông báo giờ TA ngăn việc chờ không có thông tin.
+
+### Mức tự chủ đã đổi lời hứa với người dùng
+
+Mức **“cần người duyệt”** của `gui_goi_y_bai_tap` đổi lời hứa từ “AI sẽ gửi gợi ý ngay” thành “AI có thể chuẩn bị gợi ý, nhưng TA phải duyệt trước khi gửi; nếu quá 30 phút, hệ thống báo chuyển câu hỏi cho TA và nêu giờ hỗ trợ”. Đổi lại, trợ lý vẫn hứa hỗ trợ an toàn ngay lập tức bằng checklist tự kiểm tra, nên người học không phải chờ duyệt mới có thể tiếp tục làm bài (R7).
 
 ## §5. Prototype (chặng 5)
 
