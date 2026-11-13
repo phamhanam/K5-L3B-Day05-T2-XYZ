@@ -3,9 +3,9 @@
 
 | Họ và Tên | Mã Học Viên | Việc đã làm |
 |---|---|---|
-| [Thành viên 1] | [Mã học viên] | [Chưa điền] |
-| [Thành viên 2] | [Mã học viên] | [Chưa điền] |
-| [Thành viên 3] | [Mã học viên] | [Chưa điền] |
+| Phạm Hà Nam | 2A202604023 | Mức tự chủ (chặng 4), Tốt là gì (chặng 6), demo |
+| Vũ Trọng Thắng | 2A202604022 | Lát cắt & phạm vi, Kịch bản rủi ro (chặng 2), Khi AI sai (chặng 3), demo |
+| Trần Bảo Long | 2A202604012 | Kịch bản rủi ro (chặng 2), Khi AI sai (chặng 3), Prototype (chặng 5), demo |
 
 ---
 
