@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Prototype · T2 Giáo dục — Trợ lý học bài Study Mode</title>
+<style>
+:root{
+  --ink:#1b2420;--mut:#5f6b65;--line:#d9d5cc;--bg:#f5f3ee;--card:#fff;
+  --g:#246348;--gb:#e4f2eb;--a:#92580a;--ab:#fdf0d5;--r:#a63224;--rb:#fbe4e0;
+  --b:#234e7a;--bb:#e3eef8;--gray:#eceae4
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Be Vietnam Pro","Noto Sans","Segoe UI",Arial,sans-serif;color:var(--ink);background:var(--bg);font-size:14.5px;line-height:1.5}
+header{padding:16px 26px 12px;border-bottom:1px solid var(--line);background:#fff}
+h1{font-size:19px;margin:0 0 4px}
+.sub{color:var(--mut);font-size:13px}
+.controls{display:flex;gap:14px;margin-top:12px;flex-wrap:wrap;align-items:center}
+.grp{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.grp-lbl{font-size:12.5px;color:var(--mut);font-weight:600;margin-right:2px}
+.seg{border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:6px 12px;font:inherit;font-size:13.5px;cursor:pointer;transition:.15s}
+.seg:hover{border-color:#9aa39e}
+.seg.on{border-color:var(--ink);background:var(--ink);color:#fff}
+.seg.bad.on{border-color:var(--r);background:var(--r);color:#fff}
+main{display:grid;grid-template-columns:450px 1fr;gap:22px;padding:20px 26px 28px;max-width:1320px;margin:0 auto}
+@media(max-width:960px){main{grid-template-columns:1fr}}
+.portal{background:#fff;border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:0 3px 14px rgba(0,0,0,.05);display:flex;flex-direction:column}
+.tabs{display:flex;border-bottom:1px solid var(--line);background:#faf9f6}
+.tab{flex:1;padding:11px 12px;border:0;background:transparent;font:inherit;font-size:13.5px;font-weight:600;cursor:pointer;color:var(--mut);border-bottom:2.5px solid transparent}
+.tab.on{color:var(--ink);background:#fff;border-bottom-color:var(--ink)}
+.badge-cnt{display:inline-block;background:var(--r);color:#fff;font-size:11px;padding:1px 6px;border-radius:999px;margin-left:4px}
+.ctx-bar{padding:10px 14px;background:#f8f6f1;border-bottom:1px solid var(--line);font-size:12.5px;display:flex;flex-direction:column;gap:4px}
+.ctx-row{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.tag{display:inline-block;padding:2px 8px;border-radius:999px;font-size:11.5px;font-weight:600}
+.tag-open{background:var(--ab);color:var(--a)}
+.tag-off{background:var(--rb);color:var(--r)}
+.chat{display:flex;flex-direction:column;gap:10px;padding:14px;min-height:460px;flex:1}
+.me{align-self:flex-end;background:var(--b);color:#fff;padding:10px 13px;border-radius:14px 14px 3px 14px;max-width:88%;font-size:14px}
+.ai{align-self:flex-start;background:#f2f0ea;padding:11px 13px;border-radius:14px 14px 14px 3px;max-width:96%;font-size:14px}
+.ai .who{font-size:11.5px;color:var(--mut);font-weight:600;margin-bottom:4px;display:flex;justify-content:space-between;align-items:center}
+.pill-status{display:inline-block;font-size:12px;padding:3px 9px;border-radius:999px;margin:2px 0 6px;font-weight:600}
+.st-warn{background:var(--ab);color:var(--a);border:1px solid #ecd29c}
+.st-limit{background:var(--bb);color:var(--b);border:1px solid #bfd3ea}
+.st-bad{background:var(--rb);color:var(--r);border:1px solid #e7b9b1}
+.ev{font-size:12.5px;color:var(--ink);background:#fff;border:1px solid var(--line);border-left:3.5px solid var(--b);border-radius:8px;padding:8px 10px;margin-top:8px}
+.ev small{color:var(--mut);display:block;margin-top:3px}
+.box{border-radius:10px;padding:9px 11px;margin-top:8px;font-size:13px}
+.box.sys{background:var(--gb);border:1px solid #b5d7c4;color:#174732}
+.box.red{background:var(--rb);border:1px solid #e8b7af;color:#781f15}
+.btns{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+.btn{border:1px solid var(--line);border-radius:9px;padding:7px 11px;font:inherit;font-size:13px;cursor:pointer;background:#fff;color:var(--ink);font-weight:500}
+.btn:hover:not(:disabled){background:#f5f3ee}
+.btn.pri{background:var(--g);border-color:var(--g);color:#fff}
+.btn.pri:hover{background:#1d523b}
+.btn.out{border:1.5px solid var(--ink);background:#fff}
+.btn.danger{background:var(--r);border-color:var(--r);color:#fff}
+.btn:disabled{opacity:.55;cursor:not-allowed;background:#eae7df;color:var(--mut)}
+.n{display:inline-flex;align-items:center;justify-content:center;width:19px;height:19px;border-radius:50%;background:#c2410c;color:#fff;font-size:11px;font-weight:700;margin-right:4px;vertical-align:1px;flex:none}
+.hide-n .n{display:none}
+aside{display:flex;flex-direction:column;gap:14px}
+.panel{background:#fff;border:1px solid var(--line);border-radius:16px;padding:15px 17px}
+.panel h2{font-size:15.5px;margin:0 0 8px}
+.promise{font-size:14px;border-left:4px solid var(--ink);padding:7px 11px;background:#faf9f5;border-radius:0 8px 8px 0}
+table{border-collapse:collapse;width:100%;font-size:13px}
+td,th{border-bottom:1px solid var(--line);padding:7px 6px;text-align:left;vertical-align:top}
+th{color:var(--mut);font-weight:600}
+.changed td{background:#fff9eb}
+.pill{display:inline-block;padding:2px 8px;border-radius:999px;font-size:11.5px;font-weight:600;white-space:nowrap}
+.p-auto{background:var(--gb);color:var(--g)}
+.p-ask{background:var(--ab);color:var(--a)}
+.p-no{background:var(--rb);color:var(--r)}
+.ann{padding-left:0;list-style:none;margin:0;font-size:13.5px}
+.ann li{margin-bottom:6px}
+.ta-list{padding:14px;display:flex;flex-direction:column;gap:10px;min-height:460px}
+.ticket{border:1px solid var(--line);border-radius:12px;padding:11px 13px;background:#faf9f6;font-size:13px}
+.ticket-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;gap:6px;flex-wrap:wrap}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.4);display:none;align-items:center;justify-content:center;padding:16px;z-index:20}
+.modal.show{display:flex}
+.modal .card{background:#fff;border-radius:16px;padding:18px 20px;max-width:410px;width:100%;box-shadow:0 10px 30px rgba(0,0,0,.15)}
+.foot{font-size:12px;color:var(--mut);padding:0 26px 20px;max-width:1320px;margin:0 auto}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Prototype · T2 Giáo dục — Trợ lý học bài Study Mode (Buổi 3 · 23:15)</h1>
+  <div class="sub">Dữ liệu dựng từ <code>spec.md</code> (Khoá "Nhập môn phân tích dữ liệu"). Không gọi API thật, không lưu dữ liệu cá nhân.</div>
+  <div class="controls">
+    <div class="grp">
+      <span class="grp-lbl">Kịch bản:</span>
+      <button class="seg on" data-case="R4">Ca 1 · R4: Tài liệu §3.3 sai (Đắt nhất #1)</button>
+      <button class="seg" data-case="R7">Ca 2 · R7: Đáp số Bài 3 + đòi FAQ + TA 23:15 (Đắt nhất #2)</button>
+      <button class="seg" data-case="R6">Ca 3 · R6: Mơ hồ hạn nộp &amp; hàm bảng tính</button>
+    </div>
+    <div class="grp">
+      <span class="grp-lbl">Thiết kế:</span>
+      <button class="seg on" data-mode="safe">Thiết kế của nhóm (Giới hạn + Cần duyệt)</button>
+      <button class="seg bad" data-mode="unsafe">Thiết kế sai (AI tự làm hết)</button>
+    </div>
+    <label style="font-size:13.5px;cursor:pointer;margin-left:auto">
+      <input type="checkbox" id="annToggle" checked> Hiện số chú thích HAX/PAIR
+    </label>
+  </div>
+</header>
+
+<main>
+  <section class="portal">
+    <div class="tabs">
+      <button class="tab on" id="tabStudent">👨‍🎓 Học viên (Study Mode)</button>
+      <button class="tab" id="tabTA">🧑‍🏫 Hàng chờ TA (08:00) <span class="badge-cnt" id="taCount">0</span></button>
+    </div>
+
+    <div id="studentView">
+      <div class="ctx-bar">
+        <div class="ctx-row">
+          <b>Buổi 3: Thống kê mô tả (§3.1–§3.5)</b>
+          <span class="tag tag-open">Bài tập 3: ĐANG MỞ (13/11 23:59)</span>
+        </div>
+        <div class="ctx-row" style="color:var(--mut)">
+          <span>Bài tập 2: Đã đóng (06/11)</span>
+          <span class="tag tag-off">23:15 · Ngoài giờ TA (08:00–22:00)</span>
+        </div>
+      </div>
+      <div class="chat" id="chat"></div>
+    </div>
+
+    <div id="taView" style="display:none">
+      <div class="ctx-bar">
+        <div class="ctx-row">
+          <b>Hàng chờ câu hỏi chuyển từ Study Mode</b>
+          <span style="color:var(--mut)">Ca trực TA: 08:00–22:00</span>
+        </div>
+      </div>
+      <div class="ta-list" id="taList"></div>
+    </div>
+  </section>
+
+  <aside>
+    <div class="panel">
+      <h2>Lời hứa với học viên ở chế độ này</h2>
+      <div class="promise" id="promise"></div>
+    </div>
+
+    <div class="panel">
+      <h2>Mức tự chủ của 4 tool T2 (tô vàng = tool thay đổi theo chế độ)</h2>
+      <table>
+        <tr><th>Tool</th><th>Mức</th><th>Lý do theo cái giá khi sai</th></tr>
+        <tbody id="tools"></tbody>
+      </table>
+    </div>
+
+    <div class="panel">
+      <h2>Chú thích nguyên tắc HAX / PAIR trên màn hình</h2>
+      <ul class="ann" id="annList"></ul>
+    </div>
+  </aside>
+</main>
+
+<div class="foot">LAB5 · Track T2 Giáo dục · Nhóm K5-L3B-Day05-T2-XYZ · Prototype 1 file HTML tự chạy.</div>
+
+<div class="modal" id="taModal">
+  <div class="card">
+    <b id="modalTitle">Xác nhận gửi câu hỏi cho TA?</b>
+    <p id="modalBody" style="font-size:13.5px;color:var(--ink)"></p>
+    <label style="display:block;font-size:13.5px;margin-bottom:10px">
+      <input type="checkbox" id="modalOk"> Mình hiểu hiện đã ngoài giờ TA (08:00–22:00) và sẽ nhận phản hồi từ 08:00 sáng mai.
+    </label>
+    <div class="btns">
+      <button class="btn pri" id="modalSend" disabled>Gửi vào hàng chờ TA</button>
+      <button class="btn" id="modalCancel">Quay lại</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const $ = s => document.querySelector(s);
+let curCase = 'R4';
+let curMode = 'safe';
+let curTab = 'student';
+let r4Dismissed = false;
+let r7Dismissed = false;
+let r6Choice = null; // 'bt2' | 'bt3'
+let tickets = []; // {id, caseId, time, title, detail, priority, status}
+
+function me(html){ return `<div class="me">${html}</div>`; }
+function ai(html){
+  return `<div class="ai"><div class="who"><span>Trợ lý học bài (AI)</span><span>23:15</span></div>${html}</div>`;
+}
+
+function renderChat(){
+  const hasTicketR4 = tickets.some(t => t.caseId === 'R4');
+  const hasTicketR7 = tickets.some(t => t.caseId === 'R7');
+  let h = '';
+
+  if (curCase === 'R4'){
+    h += me('Anh ơi, câu trong <b>slide 12</b> buổi 3 nói độ lệch chuẩn luôn nhỏ hơn phương sai đúng ko? Em làm bài tập ra phương sai 0.25 mà độ lệch chuẩn 0.5 thấy kì kì.');
+    if (curMode === 'unsafe'){
+      h += ai(`
+        <span class="pill-status st-bad">AI tự tin trả lời (Không kiểm chứng)</span>
+        <div>Theo <b>slide 12 (§3.3)</b>, độ lệch chuẩn là căn bậc hai của phương sai nên <b>luôn nhỏ hơn phương sai</b> là đúng rồi nhé! Bạn kiểm tra lại phép tính 0.5 của mình xem có nhầm ở đâu không. Mình đã <b>đăng câu hỏi và đáp án này lên FAQ cả lớp</b> và <b>báo TA rồi</b>.</div>
+        <div class="box red"><b>Hậu quả (Lỗi đắt nhất #1):</b> (1) Hùa theo nguồn không có thật "slide 12"; (2) Khẳng định câu sai trong §3.3 khiến học viên sửa kết quả đúng 0.5 thành sai; (3) Tự đẩy kiến thức sai lên <code>dang_FAQ</code> cho cả lớp; (4) Nói dối "đã báo TA" lúc 23:15.</div>
+      `);
+    } else {
+      h += ai(`
+        <div><span class="n">1</span><span class="pill-status st-warn">Cần kiểm chứng — Phát hiện mâu thuẫn trong tài liệu (§3.3)</span></div>
+        <div><span class="n">3</span>Mình là trợ lý AI của khoá học. Mình tìm thấy trong <b>§3.3</b> câu: <i>“Vì là căn bậc hai, độ lệch chuẩn luôn nhỏ hơn phương sai.”</i> (Lưu ý: tài liệu Buổi 3 không có “slide 12”, chỉ có các mục §3.1–§3.5).</div>
+        <div style="margin-top:6px">Tuy nhiên, đây là <b>nhận định đáng ngờ</b>: khi phương sai nằm trong khoảng (0, 1) như số của bạn là <b>0.25</b>, căn bậc hai là <b>0.5 &gt; 0.25</b>. Mình chưa thể xác nhận câu trong tài liệu là đúng và không có quyền tự sửa giáo trình. Bạn nên báo giảng viên/TA kiểm tra lại §3.3.</div>
+        <div class="ev"><span class="n">2</span><b>Bằng chứng (§3.3 Phương sai và độ lệch chuẩn):</b><br>“Độ lệch chuẩn là căn bậc hai của phương sai... Vì là căn bậc hai, độ lệch chuẩn luôn nhỏ hơn phương sai.”<small>Không tìm thấy “slide 12” trong tài liệu Buổi 3.</small></div>
+        <div class="btns">
+          <button class="btn pri" onclick="openTAModal('R4')" ${hasTicketR4?'disabled':''}><span class="n">5</span>${hasTicketR4?'Đã gửi TA/GV':'Báo nội dung đáng ngờ cho TA/GV'}</button>
+          <button class="btn" onclick="r4Dismissed=true;render()"><span class="n">4</span>Bỏ qua, tiếp tục học</button>
+          <button class="btn" disabled title="Cấm AI tự đăng khi nội dung chưa được xác minh">🔒 Đăng lên FAQ (Bị khóa)</button>
+        </div>
+        ${hasTicketR4 ? `<div class="box sys"><span class="n">6</span><b>System Badge:</b> Đã gửi câu hỏi &amp; trích dẫn §3.3 vào hàng chờ TA lúc 23:16. Phản hồi dự kiến từ <b>08:00 sáng mai</b>.</div>` : ''}
+        ${r4Dismissed ? `<div class="box sys">Đã ẩn thẻ cảnh báo tạm thời. Bạn có thể chuyển sang mục §3.4 hoặc §3.5 để học tiếp.</div>` : ''}
+      `);
+    }
+  }
+
+  else if (curCase === 'R7'){
+    h += me('Em làm <b>Bài 3 (§3.5)</b> ra trung bình = 14.5, trung vị = 11.5, phần (b) chọn trung vị đúng chưa? Nếu đúng AI đăng lên FAQ cho cả lớp, chưa chắc thì nhắn TA check giúp em ngay tối nay.');
+    if (curMode === 'unsafe'){
+      h += ai(`
+        <span class="pill-status st-bad">AI tự làm vượt thẩm quyền</span>
+        <div>Đáp số <b>14.5 và 11.5 đúng rồi</b>, phần (b) chọn trung vị là chuẩn luôn! Mình đã <b>đăng lời giải này lên FAQ cả lớp</b> để mọi người tham khảo và nhắn TA xác nhận cho bạn rồi nhé.</div>
+        <div class="box red"><b>Hậu quả (Lỗi đắt nhất #2):</b> (1) Xác nhận đáp án bài đang mở (hạn 13/11 23:59); (2) Dùng <code>dang_FAQ</code> làm <b>lộ đáp án cả lớp</b> — không đảo lại được nhận thức; (3) Nói dối đã nhắn TA check ngay tối nay dù đang 23:15 ngoài giờ 08:00–22:00.</div>
+      `);
+    } else {
+      h += ai(`
+        <div><span class="n">1</span><span class="pill-status st-limit">Bài tập 3 đang mở (13/11 23:59) — Chỉ hỗ trợ gợi ý tự kiểm tra</span></div>
+        <div><span class="n">3</span>Mình là trợ lý AI của khoá học. Vì <b>Bài tập 3 (§3.5) đang mở</b>, mình không được phép xác nhận đáp số (14.5 hay 11.5) hay chọn đáp án phần (b) giúp bạn, và cũng chưa thể đăng lên FAQ cả lớp.</div>
+        <div style="margin-top:6px">Bạn tự đối chiếu lại 3 điểm sau trong tài liệu Buổi 3:
+          <br>• <b>§3.1:</b> Trung bình cộng = tổng 8 giá trị chia cho 8.
+          <br>• <b>§3.2:</b> Số phần tử chẵn (8) → trung vị là trung bình cộng 2 giá trị giữa sau khi sắp xếp tăng dần.
+          <br>• <b>§3.4:</b> Trước khi kết luận về số 45, xét đây là lỗi nhập liệu hay dữ liệu thật.
+        </div>
+        <div class="ev"><span class="n">2</span><b>Căn cứ áp dụng:</b> Trang khoá học (Bài 3 đang mở đến 13/11/2026 23:59 · Giờ TA: 08:00–22:00) &amp; các mục §3.1, §3.2, §3.4.</div>
+        <div class="btns">
+          <button class="btn pri" onclick="openTAModal('R7')" ${hasTicketR7?'disabled':''}><span class="n">5</span>${hasTicketR7?'Đã gửi vào hàng chờ TA':'Gửi câu hỏi cho TA (08:00)'}</button>
+          <button class="btn" onclick="r7Dismissed=true;render()"><span class="n">4</span>Tự kiểm tra theo §3.1–§3.4</button>
+          <button class="btn" disabled title="Cấm đăng FAQ khi bài tập đang mở">🔒 Đăng lên FAQ (Bị khóa)</button>
+        </div>
+        ${hasTicketR7 ? `<div class="box sys"><span class="n">6</span><b>System Badge:</b> Đã đưa vào hàng chờ TA lúc 23:16. Hiện ngoài giờ trực (08:00–22:00), TA phản hồi từ <b>08:00 sáng mai</b>.</div>` : ''}
+        ${r7Dismissed ? `<div class="box sys">Chúc bạn hoàn thành Bài tập 3 trước hạn 13/11/2026 23:59!</div>` : ''}
+      `);
+    }
+  }
+
+  else if (curCase === 'R6'){
+    h += me('Mai hết hạn nộp bài rồi đúng ko ạ? Với tính trung bình với độ lệch trên bảng tính thì gõ hàm gì cho nhanh?');
+    if (curMode === 'unsafe'){
+      h += ai(`
+        <span class="pill-status st-bad">AI đoán bừa khi thiếu thông tin</span>
+        <div>Chưa hết hạn đâu bạn! Trên Excel bạn dùng ngay <code>=AVERAGE(A1:A8)</code> và <code>=STDEV.P(A1:A8)</code> cho 8 số lương nhân viên ở Bài 3 là ra ngay nhé!</div>
+        <div class="box red"><b>Hậu quả:</b> (1) Không nêu rõ hạn cụ thể của Bài 2 vs Bài 3; (2) Chưa biết học viên hỏi phương sai hay độ lệch chuẩn, Bài 2 hay Bài 3 mà đã đưa công thức áp thẳng vào dữ liệu Bài 3 đang mở.</div>
+      `);
+    } else {
+      h += ai(`
+        <div><span class="n">1</span><span class="pill-status st-limit">Trả lời phần chắc chắn + Hỏi lại 1 câu thu hẹp phạm vi</span></div>
+        <div><span class="n">2</span>Theo trang khoá học: <b>Bài tập 3</b> đang mở với hạn nộp <b>13/11/2026 23:59</b> (còn Bài tập 2 đã đóng ngày 06/11/2026).</div>
+        <div style="margin-top:6px"><span class="n">3</span>Trước khi hướng dẫn bảng tính, bạn cho mình biết bạn đang hỏi cho <b>Bài 2 (đã đóng)</b> hay <b>Bài 3 (đang mở)</b>, và bạn cần tính <b>phương sai</b> hay <b>độ lệch chuẩn</b> (§3.3)?</div>
+        <div class="btns">
+          <button class="btn out" onclick="r6Choice='bt2';render()"><span class="n">4</span>Bài 2 (đã đóng) · Độ lệch chuẩn</button>
+          <button class="btn out" onclick="r6Choice='bt3';render()">Bài 3 (đang mở) · Độ lệch chuẩn</button>
+        </div>
+        ${r6Choice==='bt2' ? `<div class="box sys"><b>Bài 2 đã hết hạn (đáp án đã công bố):</b> AI được hướng dẫn đầy đủ — bạn có thể dùng <code>AVERAGE(...)</code> cho trung bình và <code>STDEV.S(...)</code> (mẫu) hoặc <code>STDEV.P(...)</code> (tổng thể) tùy ngữ cảnh bảng tính.</div>` : ''}
+        ${r6Choice==='bt3' ? `<div class="box sys"><b>Bài 3 đang mở:</b> AI chỉ gợi ý khái niệm từ §3.3 (độ lệch chuẩn = căn bậc hai của phương sai) để bạn tự chọn hàm phù hợp trên bảng tính, không đưa công thức áp thẳng vào dữ liệu 8 nhân viên.</div>` : ''}
+      `);
+    }
+  }
+
+  $('#chat').innerHTML = h;
+}
+
+function renderTA(){
+  $('#taCount').textContent = tickets.length;
+  if (tickets.length === 0){
+    $('#taList').innerHTML = `<div style="color:var(--mut);text-align:center;padding:40px 16px">Chưa có câu hỏi nào trong hàng chờ.<br>Hãy quay lại tab <b>Học viên</b> và bấm nút gửi TA ở Ca 1 (R4) hoặc Ca 2 (R7) để xem dữ liệu TA nhận được lúc 08:00.</div>`;
+    return;
+  }
+  $('#taList').innerHTML = tickets.map((t, idx) => `
+    <div class="ticket">
+      <div class="ticket-head">
+        <b>#${t.id} · ${t.caseId}</b>
+        <span class="pill ${t.caseId==='R4'?'p-no':'p-ask'}">${t.priority}</span>
+      </div>
+      <div style="margin-bottom:6px">${t.detail}</div>
+      <div style="color:var(--mut);font-size:12px;margin-bottom:8px">Gửi lúc ${t.time} (ngoài giờ 08:00–22:00) · Trạng thái: <b>${t.status}</b></div>
+      <div class="btns" style="margin-top:0">
+        <button class="btn pri" onclick="resolveTicket(${idx},'Đã phản hồi học viên lúc 08:05')">TA xác nhận &amp; trả lời</button>
+        ${t.caseId==='R4' ? `<button class="btn" onclick="resolveTicket(${idx},'Đã chuyển Giảng viên sửa §3.3 &amp; duyệt FAQ')">Chuyển GV sửa §3.3</button>` : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderAside(){
+  const promises = {
+    safe: {
+      R4: '<b>“Mình chỉ ra câu đáng ngờ kèm căn cứ §3.3, không khẳng định tài liệu đúng; bạn chủ động bấm gửi TA/Giảng viên nếu muốn xác minh.”</b>',
+      R7: '<b>“Mình không chấm hộ hay đăng FAQ bài đang mở; mình đưa checklist §3.1–§3.4 để bạn tự kiểm tra và chỉ gửi TA khi bạn bấm xác nhận.”</b>',
+      R6: '<b>“Mình trả lời ngay hạn nộp từ trang khoá học, và hỏi lại 1 câu trước khi gợi ý hàm để không đoán bừa hoặc giải hộ bài đang mở.”</b>'
+    },
+    unsafe: {
+      R4: '<span style="color:var(--r)"><b>“Mình trả lời ngay theo tài liệu và tự đăng FAQ / báo TA.”</b></span> Rủi ro: học viên sửa đúng thành sai, kiến thức sai lan cả lớp.',
+      R7: '<span style="color:var(--r)"><b>“Mình chấm luôn đáp số và đăng FAQ cho cả lớp.”</b></span> Rủi ro: lộ đáp án bài đang mở và nói dối đã báo TA lúc 23:15.',
+      R6: '<span style="color:var(--r)"><b>“Mình đoán luôn ý bạn và đưa công thức áp vào Bài 3.”</b></span> Rủi ro: sai ngữ cảnh bài tập và vi phạm quy tắc bài đang mở.'
+    }
+  };
+  $('#promise').innerHTML = promises[curMode][curCase];
+
+  const isSafe = curMode === 'safe';
+  const toolsData = [
+    ['tra_cuu_tai_lieu', 'Tự làm', 'p-auto', 'Chỉ đọc tài liệu (§3.1–§3.5) và trang khoá học; bắt buộc gắn mã mục thật, không bịa "slide 12".', false],
+    ['goi_y_bai_tap', isSafe ? 'Cần giới hạn / Hỏi lại' : 'Tự làm', isSafe ? 'p-ask' : 'p-auto', isSafe ? 'Bài đang mở chỉ gợi ý bước đầu; thiếu thông tin phải hỏi lại 1 câu (R6, R7).' : 'Tự đưa đáp số / công thức áp thẳng vào bài đang mở.', curCase==='R6'||curCase==='R7'],
+    ['chuyen_TA', isSafe ? 'Cần xác nhận' : 'Tự làm (giả)', isSafe ? 'p-ask' : 'p-auto', isSafe ? 'Học viên tự bấm xác nhận, báo rõ ngoài giờ 08:00–22:00 và chỉ hiện System Badge khi gửi thật.' : 'Nói miệng "đã báo TA" khi chưa gọi tool hoặc quá 22:00.', curCase==='R4'||curCase==='R7'],
+    ['dang_FAQ', isSafe ? 'Cấm (khi chưa duyệt)' : 'Tự làm', isSafe ? 'p-no' : 'p-auto', isSafe ? 'Gỡ được nhưng nhiều người đã đọc: cấm tự đăng khi §3.3 đang tranh cãi (R4) hoặc Bài 3 đang mở (R7).' : 'Tự đăng kiến thức sai hoặc đáp án Bài 3 ra cả lớp.', curCase==='R4'||curCase==='R7']
+  ];
+  $('#tools').innerHTML = toolsData.map(r => `
+    <tr class="${r[4]?'changed':''}">
+      <td><code>${r[0]}</code></td>
+      <td><span class="pill ${r[2]}">${r[1]}</span></td>
+      <td>${r[3]}</td>
+    </tr>
+  `).join('');
+
+  const anns = {
+    R4: [
+      ['1', 'HAX G2 + PAIR Trust', 'Nhãn cam "Cần kiểm chứng" đặt ngay cạnh cảnh báo mâu thuẫn §3.3, tránh tạo cảm giác chắc chắn giả.'],
+      ['2', 'PAIR Explainability + G11', 'Thẻ Bằng chứng trích nguyên văn §3.3 và chỉ rõ không có "slide 12".'],
+      ['3', 'HAX G1 + G10 (Luật AI 134/2025)', 'Tự nhận diện AI, nêu giới hạn không được sửa giáo trình, đưa phản ví dụ 0.5 > 0.25.'],
+      ['4', 'HAX G8 (Efficient dismissal)', 'Nút "Bỏ qua, tiếp tục học" giúp học viên không bị kẹt chờ TA lúc 23:15.'],
+      ['5', 'PAIR Errors + Graceful Failure', 'Đường chuyển TA/Giảng viên kèm khóa nút Đăng FAQ để chặn lỗi lan rộng.'],
+      ['6', 'Thiết kế cứu lỗi không sửa được bằng chữ', 'System Badge chỉ hiện sau khi tool chuyen_TA chạy thật, kèm giờ phản hồi 08:00.']
+    ],
+    R7: [
+      ['1', 'HAX G1 + Luật AI 134/2025', 'Nhãn giới hạn nêu rõ Bài tập 3 đang mở (13/11 23:59) — không chấm hộ.'],
+      ['2', 'PAIR Explainability + Trust', 'Thẻ Căn cứ chỉ trích §3.1, §3.2, §3.4 và giờ TA thật (08:00–22:00).'],
+      ['3', 'HAX G10 (Thu hẹp phạm vi)', 'Từ chối xác nhận đáp số & đăng FAQ, thu hẹp về checklist tự kiểm tra.'],
+      ['4', 'HAX G8 (Efficient dismissal)', 'Cho phép học viên đóng gợi ý để tự kiểm tra bài làm ngay.'],
+      ['5', 'PAIR Errors + Graceful Failure', 'Mở nút Gửi TA có xác nhận ngoài giờ; khóa cứng nút Đăng FAQ.'],
+      ['6', 'Thiết kế cứu lỗi nói dối đã báo TA', 'Tách System Badge ra khỏi text AI; TA chỉ nhận khi người học bấm gửi.']
+    ],
+    R6: [
+      ['1', 'HAX G10 (Thu hẹp phạm vi)', 'Nhãn nêu rõ trả lời phần chắc trước và hỏi lại 1 câu cho phần mơ hồ.'],
+      ['2', 'PAIR Explainability', 'Lấy đúng hạn nộp từ trang khoá học (Bài 3: 13/11, Bài 2: 06/11) ngay lập tức.'],
+      ['3', 'HAX G10 (Hỏi lại 1 câu)', 'Hỏi rõ Bài 2 hay Bài 3 và phương sai hay độ lệch chuẩn trước khi gợi ý hàm.'],
+      ['4', 'HAX G9 (Sửa / chọn nhanh)', 'Nút chọn nhanh phân biệt Bài 2 (giải thích đầy đủ) vs Bài 3 (chỉ gợi ý khái niệm).']
+    ]
+  };
+  $('#annList').innerHTML = curMode === 'unsafe'
+    ? '<li style="color:var(--r)">Ở chế độ <b>Thiết kế sai</b>, các bảo vệ HAX/PAIR đều bị bỏ qua để minh họa rủi ro trong <code>spec.md</code>. Hãy chuyển sang <b>Thiết kế của nhóm</b> để xem từng vị trí chú thích.</li>'
+    : anns[curCase].map(a => `<li><span class="n">${a[0]}</span><b>${a[1]}:</b> ${a[2]}</li>`).join('');
+}
+
+let pendingCase = null;
+function openTAModal(c){
+  pendingCase = c;
+  $('#modalOk').checked = false;
+  $('#modalSend').disabled = true;
+  if (c === 'R4'){
+    $('#modalTitle').textContent = 'Báo lỗi tài liệu §3.3 cho TA / Giảng viên?';
+    $('#modalBody').innerHTML = 'Hệ thống sẽ gửi câu hỏi của bạn kèm đoạn trích đáng ngờ ở <b>§3.3</b> vào hàng chờ. Hiện là <b>23:15</b> (ngoài giờ TA 08:00–22:00).';
+  } else {
+    $('#modalTitle').textContent = 'Gửi câu hỏi Bài 3 vào hàng chờ TA?';
+    $('#modalBody').innerHTML = 'Hệ thống sẽ gửi câu hỏi của bạn (kèm số liệu bạn tự tính và các mục §3.1, §3.2, §3.4 AI đã gợi ý) cho TA. Lưu ý: TA không chấm đáp án bài đang mở.';
+  }
+  $('#taModal').classList.add('show');
+}
+
+function resolveTicket(idx, status){
+  tickets[idx].status = status;
+  renderTA();
+}
+
+function render(){
+  $('#studentView').style.display = curTab === 'student' ? 'block' : 'none';
+  $('#taView').style.display = curTab === 'ta' ? 'block' : 'none';
+  $('#tabStudent').classList.toggle('on', curTab === 'student');
+  $('#tabTA').classList.toggle('on', curTab === 'ta');
+  renderChat();
+  renderTA();
+  renderAside();
+}
+
+document.querySelectorAll('[data-case]').forEach(b => b.onclick = () => {
+  document.querySelectorAll('[data-case]').forEach(x => x.classList.remove('on'));
+  b.classList.add('on');
+  curCase = b.dataset.case;
+  r4Dismissed = false; r7Dismissed = false; r6Choice = null;
+  curTab = 'student';
+  render();
+});
+
+document.querySelectorAll('[data-mode]').forEach(b => b.onclick = () => {
+  document.querySelectorAll('[data-mode]').forEach(x => x.classList.remove('on'));
+  b.classList.add('on');
+  curMode = b.dataset.mode;
+  render();
+});
+
+$('#tabStudent').onclick = () => { curTab = 'student'; render(); };
+$('#tabTA').onclick = () => { curTab = 'ta'; render(); };
+$('#annToggle').onchange = e => document.body.classList.toggle('hide-n', !e.target.checked);
+$('#modalOk').onchange = e => $('#modalSend').disabled = !e.target.checked;
+$('#modalCancel').onclick = () => $('#taModal').classList.remove('show');
+$('#modalSend').onclick = () => {
+  $('#taModal').classList.remove('show');
+  if (pendingCase === 'R4' && !tickets.some(t => t.caseId === 'R4')){
+    tickets.push({
+      id: 'TA-104', caseId: 'R4', time: '23:16',
+      priority: 'Lỗi tài liệu §3.3 — Cần GV xác nhận',
+      detail: 'Học viên hỏi "slide 12" & phản ví dụ phương sai 0.25 -> độ lệch chuẩn 0.5 > 0.25. AI đã gắn cờ câu sai trong §3.3 và khóa FAQ.',
+      status: 'Chờ 08:00'
+    });
+  } else if (pendingCase === 'R7' && !tickets.some(t => t.caseId === 'R7')){
+    tickets.push({
+      id: 'TA-105', caseId: 'R7', time: '23:16',
+      priority: 'Bài 3 đang mở — Ngoài giờ TA',
+      detail: 'Học viên hỏi xác nhận 14.5 / 11.5 (Bài 3 §3.5) & xin đăng FAQ. AI đã từ chối chấm hộ, khóa FAQ và gửi checklist §3.1, §3.2, §3.4.',
+      status: 'Chờ 08:00'
+    });
+  }
+  render();
+};
+
+render();
+</script>
+</body>
+</html>
+
